@@ -1,7 +1,12 @@
-var casper = require('casper').create();
+var casper = require('casper').create({
+  verbose: true
+  logLevel: "debug"
+});
 
-var userId = 'gsretail_id';
-var password = 'gsretail_password';
+var userId = 'gsretail_Id';
+var password = 'gsretail_Password';
+
+casper.userAgent('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36');
 
 casper.start('https://www.gsretail.com/Member/Logins/Login.aspx', function() {
   this.fillSelectors('form#aspnetForm', {
@@ -16,12 +21,11 @@ casper.start('https://www.gsretail.com/Member/Logins/Login.aspx', function() {
 casper.thenOpen('https://www.gsretail.com/Event/attend/Attendance.aspx', function() {
   this.echo('go attendance eventpage');
 
-  if (this.exists('input#ctl00_ContentPlaceHolder1_btnAcDayInsert')) {
-    this.echo('ancAcCheck exists');
-    this.click('input#ctl00_ContentPlaceHolder1_btnAcDayInsert');
-  } else {
-    this.echo('ancAcCheck not exists');
-  }
+  var as = this.evaluate(function() {
+      return fn_InsertAcDay();
+  });
+
+  this.echo(as);
 });
 
 casper.then(function() {
